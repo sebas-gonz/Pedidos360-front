@@ -1,0 +1,73 @@
+<div style="padding: 20px; max-width: 1000px; margin: auto; font-family: sans-serif;">
+    <h2>Mis Órdenes</h2>
+    <p style="color: #666;">Revisa el estado de tus compras.</p>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+        <tr style="background: #333; color: white;">
+            <th style="padding: 10px; text-align: left;">ID Orden</th>
+            <th style="padding: 10px; text-align: left;">Total</th>
+            <th style="padding: 10px; text-align: center;">Estado</th>
+            <th style="padding: 10px; text-align: center;">Detalles</th> <!-- NUEVA COLUMNA -->
+        </tr>
+        </thead>
+        <tbody>
+            @for (order of myOrders; track order.orderUuid) {
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <td style="padding: 10px; font-family: monospace; font-size: 12px;">{{ order.orderUuid }}</td>
+                    <td style="padding: 10px;">{{ order.priceCurrency }} {{ order.totalOrderAmount }}</td>
+                    <td style="padding: 10px; text-align: center;">
+                        <span style="background: #e9ecef; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+                          {{ order.orderStatus }}
+                        </span>
+                    </td>
+                    <td style="padding: 10px; text-align: center;">
+                        <button (click)="openDetails(order)" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                            👁️ Ver
+                        </button>
+                    </td>
+                </tr>
+            } @empty {
+                <tr>
+                    <td colspan="4" style="padding: 20px; text-align: center;">No has realizado ninguna orden aún.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- MODAL DE DETALLES -->
+@if (selectedOrder) {
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: white; padding: 25px; border-radius: 8px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                <h3 style="margin: 0;">Detalle de Compra</h3>
+                <button (click)="closeDetails()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #dc3545;">&times;</button>
+            </div>
+
+            <p><strong>Estado:</strong> {{ selectedOrder.orderStatus }}</p>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 15px;">
+                <thead>
+                <tr style="background: #f8f9fa;">
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Producto</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Cant.</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @for (item of selectedOrder.orderItems; track item.orderItemUuid) {
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">{{ item.product.productName }}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ item.quantity }}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">{{ selectedOrder.priceCurrency }} {{ item.totalOrderItemAmount }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div style="text-align: right; margin-top: 15px; font-size: 16px; font-weight: bold;">
+                Total Pagado: {{ selectedOrder.priceCurrency }} {{ selectedOrder.totalOrderAmount }}
+            </div>
+        </div>
+    </div>
+}

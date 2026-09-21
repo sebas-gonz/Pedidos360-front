@@ -1,0 +1,44 @@
+<div style="padding: 20px; max-width: 1200px; margin: auto; font-family: sans-serif;">
+    <h2>Catálogo de Productos</h2>
+    <div style="display: flex; gap: 20px;">
+        <div style="flex: 2;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;">
+                @for (product of availableProducts; track product.uuid) {
+                    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fff;">
+                        <h4 style="margin-top: 0;">{{ product.productName }}</h4>
+                        <p style="color: #666; font-size: 14px;">{{ product.description }}</p>
+                        <p><strong>{{ product.priceCurrency }} {{ product.price }}</strong></p>
+                        <p style="font-size: 12px; color: #888;">Stock: {{ product.stock }}</p>
+                        <button (click)="addToCart(product)" [disabled]="product.stock === 0"
+                                style="width: 100%; padding: 8px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                } @empty {
+                    <p>No hay productos disponibles.</p>
+                }
+            </div>
+        </div>
+
+        <div style="flex: 1; background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #ddd; height: fit-content;">
+            <h3>Tu Carrito</h3>
+            @for (item of cart; track item.product.uuid) {
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span>{{ item.product.productName }} (x{{ item.quantity }})</span>
+                    <span>CLP {{ item.product.price * item.quantity }}</span>
+                    <button (click)="removeFromCart(item.product.uuid)" style="background: none; border: none; color: red; cursor: pointer; font-weight: bold;">X</button>
+                </div>
+            } @empty {
+                <p style="color: #666; font-style: italic;">El carrito está vacío.</p>
+            }
+
+            @if (cart.length > 0) {
+                <hr>
+                <h4>Total: CLP {{ getCartTotal() }}</h4>
+                <button (click)="submitOrder()" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    Confirmar Orden
+                </button>
+            }
+        </div>
+    </div>
+</div>

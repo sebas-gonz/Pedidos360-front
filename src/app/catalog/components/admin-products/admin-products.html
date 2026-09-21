@@ -1,0 +1,92 @@
+<div style="padding: 20px; max-width: 800px; margin: auto; font-family: sans-serif;">
+    <h2>Panel de Administración: Productos</h2>
+
+    @if (!editingProduct) {
+        <div style="background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3>Crear Nuevo Producto</h3>
+            <form (ngSubmit)="onCreateSubmit()" #createForm="ngForm">
+                <div style="margin-bottom: 10px;">
+                    <label>Nombre del Producto:</label><br>
+                    <input type="text" name="productName" [(ngModel)]="newProduct.productName" required style="width: 100%; padding: 8px;">
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label>Descripción:</label><br>
+                    <textarea name="description" [(ngModel)]="newProduct.description" required style="width: 100%; padding: 8px;"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <div style="flex: 1;">
+                        <label>Precio (CLP):</label><br>
+                        <input type="number" name="price" [(ngModel)]="newProduct.price" required min="1" style="width: 100%; padding: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Stock Inicial:</label><br>
+                        <input type="number" name="stock" [(ngModel)]="newProduct.stock" required min="0" style="width: 100%; padding: 8px;">
+                    </div>
+                </div>
+
+                <button type="submit" [disabled]="!createForm.form.valid" style="background: #28a745; color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 4px;">
+                    Guardar Producto
+                </button>
+            </form>
+        </div>
+    }
+    @else {
+        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffeeba;">
+            <h3>Editando Producto: {{ editingProduct.productName }}</h3>
+            <form (ngSubmit)="onUpdateSubmit()" #updateForm="ngForm">
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label>Nuevo Precio (CLP):</label><br>
+                        <input type="number" name="editPrice" [(ngModel)]="updatePayload.price" required min="1" style="width: 100%; padding: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Nuevo Stock:</label><br>
+                        <input type="number" name="editStock" [(ngModel)]="updatePayload.stock" required min="0" style="width: 100%; padding: 8px;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" [disabled]="!updateForm.form.valid" style="background: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 4px;">
+                        Actualizar
+                    </button>
+                    <button type="button" (click)="cancelEdit()" style="background: #6c757d; color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 4px;">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+
+    <h3>Inventario Actual</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+        <tr style="background: #333; color: white;">
+            <th style="padding: 10px; text-align: left;">Nombre</th>
+            <th style="padding: 10px; text-align: left;">Precio</th>
+            <th style="padding: 10px; text-align: left;">Stock</th>
+            <th style="padding: 10px; text-align: center;">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+            @for (product of products; track product.uuid) {
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <td style="padding: 10px;">{{ product.productName }}</td>
+                    <td style="padding: 10px;">{{ product.priceCurrency }} {{ product.price }}</td>
+                    <td style="padding: 10px;">{{ product.stock }}</td>
+                    <td style="padding: 10px; text-align: center;">
+                        <button (click)="startEdit(product)" style="background: #ffc107; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            } @empty {
+                <tr>
+                    <td colspan="4" style="padding: 10px; text-align: center;">No hay productos registrados.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
