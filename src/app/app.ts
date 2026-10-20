@@ -7,11 +7,16 @@ import {CustomersOrdersComponent} from './orders/components/customers-orders.com
 import {OperatorOrdersComponent} from './orders/components/operator-orders.component/operator-orders.component';
 import {AdminDashboardComponent} from './dashboard/components/admin-dashboard.component/admin-dashboard.component';
 import {CustomerCatalogComponent} from './catalog/components/customer-catalog.component/customer-catalog.component';
+import {AdminAuditComponent} from './audit/components/admin-audit/admin-audit.component';
+import {
+    CustomerNotificationsComponent
+} from './notification/components/customer-notifications-component/customer-notifications-component';
+import {KitchenTicketsComponent} from './notification/components/kitchen-tickets-component/kitchen-tickets-component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, AdminProducts, CustomersOrdersComponent, OperatorOrdersComponent, AdminDashboardComponent, CustomerCatalogComponent],
+    imports: [RouterOutlet, AdminProducts, CustomersOrdersComponent, OperatorOrdersComponent, AdminDashboardComponent, CustomerCatalogComponent, AdminAuditComponent, CustomerNotificationsComponent, KitchenTicketsComponent],
     templateUrl: './app.html',
 })
 export class App implements OnInit {

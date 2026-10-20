@@ -1,0 +1,77 @@
+<div style="padding: 20px; max-width: 1000px; margin: auto; font-family: sans-serif;">
+    <h2 style="color: #333; margin-bottom: 5px;">Panel de Auditoría e Infraestructura</h2>
+    <p style="color: #666; margin-bottom: 30px;">Gestión de colas ActiveMQ y trazabilidad de eventos del sistema.</p>
+
+    <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #28a745; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #333;">Administración de Mensajería (Broker)</h3>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 15px;">
+            <input type="text" [(ngModel)]="newQueueName" placeholder="Escribe el nombre de la nueva cola"
+                   style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <button (click)="createQueue()"
+                    style="background: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                + Crear Cola
+            </button>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 4px; overflow: hidden;">
+            <thead>
+            <tr style="background: #343a40; color: white;">
+                <th style="padding: 12px 15px; text-align: left;">Nombre de la Cola (ActiveMQ)</th>
+                <th style="padding: 12px 15px; text-align: center; width: 120px;">Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+                @for (queue of activeQueues; track queue) {
+                    <tr style="border-bottom: 1px solid #e9ecef;">
+                        <td style="padding: 12px 15px; font-family: monospace; font-size: 14px;">{{ queue }}</td>
+                        <td style="padding: 12px 15px; text-align: center;">
+                            <button (click)="deleteQueue(queue)"
+                                    style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr><td colspan="2" style="padding: 15px; text-align: center; color: #666;">No hay colas...</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #17a2b8;">
+        <h3 style="margin-top: 0; color: #333;">Timeline de eventos</h3>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <thead>
+            <tr style="background: #f4f6f9; border-bottom: 2px solid #dee2e6; color: #495057;">
+                <th style="padding: 12px; text-align: left; width: 160px;">Fecha y Hora</th>
+                <th style="padding: 12px; text-align: left;">Evento</th>
+                <th style="padding: 12px; text-align: left;">Usuario / Rol</th>
+                <th style="padding: 12px; text-align: left;">Detalles</th>
+            </tr>
+            </thead>
+            <tbody>
+                @for (event of timelineEvents; track $index) {
+                    <tr style="border-bottom: 1px solid #e9ecef;">
+                        <td style="padding: 12px; font-size: 13px; color: #6c757d;">
+                            {{ event.eventDate | date:'dd/MM/yyyy HH:mm:ss' }}
+                        </td>
+                        <td style="padding: 12px;">
+                            <span style="background: #e2e3e5; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: #495057;">
+                                {{ event.eventType }}
+                            </span>
+                        </td>
+                        <td style="padding: 12px; font-size: 14px;">
+                            <div style="font-weight: 500;">{{ event.userEmail }}</div>
+                            <div style="color: #6c757d; font-size: 12px; margin-top: 2px;">Rol: {{ event.userRole }}</div>
+                        </td>
+                        <td style="padding: 12px; font-size: 14px; color: #333;">{{ event.details }}</td>
+                    </tr>
+                } @empty {
+                    <tr><td colspan="4" style="padding: 20px; text-align: center; color: #6c757d;">No hay eventos de auditoría registrados en los últimos 30 días.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -24,8 +24,8 @@ export class OrderService {
         return this.http.get<OrderResponseDTO[]>(this.apiUrl);
     }
 
-    updateOrderStatus(orderUuid: string, newStatus: string): Observable<OrderResponseDTO> {
-        return this.http.put<OrderResponseDTO>(`${this.apiUrl}/${orderUuid}/status`, { orderStatus: newStatus });
+    updateOrderStatus(orderUuid: string): Observable<OrderResponseDTO> {
+        return this.http.put<OrderResponseDTO>(`${this.apiUrl}/${orderUuid}/status`,{});
     }
     getOrdersByStatus(status: string): Observable<OrderResponseDTO[]> {
         return this.http.get<OrderResponseDTO[]>(`${this.apiUrl}/status/${status}`);

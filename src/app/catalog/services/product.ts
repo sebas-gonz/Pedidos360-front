@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable({
-    providedIn: 'root' // <-- Esto le dice a Angular que el servicio es global
+    providedIn: 'root'
 })
 export class ProductService {
     private apiUrl = `${environment.apiConfig.uri}/catalog`;

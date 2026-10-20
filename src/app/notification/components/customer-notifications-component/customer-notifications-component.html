@@ -1,0 +1,11 @@
+<div style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    @for (notif of notifications; track notif.orderUuid) {
+        <div style="background: #007bff; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; min-width: 300px;">
+            <div>
+                <strong style="display: block; margin-bottom: 5px;">¡Actualización de tu pedido!</strong>
+                <span style="font-size: 14px;">La orden {{ notif.orderUuid | slice:0:8 }} ahora está: <b>{{ notif.orderStatus }}</b></span>
+            </div>
+            <button (click)="closeNotification(notif.orderUuid)" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; margin-left: 15px;">&times;</button>
+        </div>
+    }
+</div>

@@ -9,6 +9,6 @@ export const environment = {
   },
   apiConfig: {
     scopes: ['api://3e4f2a5e-fc6f-465b-bece-9a036469797d/access_as_user'],
-    uri: 'https://pgon6jrwkb.execute-api.us-east-1.amazonaws.com/v1/api'
+    uri: 'http://184.196.175.90:8080/api'
   }
 };

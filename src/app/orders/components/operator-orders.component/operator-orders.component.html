@@ -1,6 +1,7 @@
 <div style="padding: 20px; max-width: 1200px; margin: auto; font-family: sans-serif;">
     <h2>Panel de Operador: Gestión de Órdenes</h2>
     <p style="color: #666;">Administra y cambia el estado de los pedidos ingresados al sistema.</p>
+    <app-kitchen-tickets></app-kitchen-tickets>
     <div style="margin-top: 20px; margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; gap: 15px;">
         <label for="statusFilter" style="font-weight: bold; margin: 0;">Filtrar por estado:</label>
         <select id="statusFilter"
@@ -40,31 +41,35 @@
                         </button>
                     </td>
                     <td style="padding: 12px;">
-                        <select #statusSelect
-                                [value]="order.orderStatus"
-                                (change)="0"
-                                [disabled]="order.orderStatus === 'DELIVERED' || order.orderStatus === 'CANCELED'"
-                                style="padding: 6px; border-radius: 4px; border: 1px solid #ccc; width: 100%;">
-
-                            @for (state of getValidNextStates(order.orderStatus); track state) {
-                                <option [value]="state">{{ state }}</option>
-                            }
-                        </select>
+                        <span style="font-weight: bold; background: #e9ecef; padding: 5px 10px; border-radius: 15px;">
+                            {{ order.orderStatus }}
+                        </span>
                     </td>
-
                     <td style="padding: 12px; text-align: center;">
-                        <button
-                            (click)="changeStatus(order.orderUuid, statusSelect.value)"
-                            [disabled]="order.orderStatus === statusSelect.value || order.orderStatus === 'DELIVERED' || order.orderStatus === 'CANCELED'"
-                            style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;"
-                            [style.opacity]="order.orderStatus === statusSelect.value || order.orderStatus === 'DELIVERED' || order.orderStatus === 'CANCELED' ? 0.5 : 1">
-                            Guardar
-                        </button>
+                        @if (order.orderStatus === 'CREATED') {
+                            <button (click)="advanceStatus(order.orderUuid)" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                Aceptar Pedido
+                            </button>
+                        } @else if (order.orderStatus === 'ACCEPTED') {
+                            <button (click)="advanceStatus(order.orderUuid)" style="background: #ffc107; color: black; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                Enviar a Cocina
+                            </button>
+                        } @else if (order.orderStatus === 'PREPARING') {
+                            <button (click)="advanceStatus(order.orderUuid)" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                Despachar
+                            </button>
+                        } @else if (order.orderStatus === 'DISPATCHED') {
+                            <button (click)="advanceStatus(order.orderUuid)" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                Marcar Entregado
+                            </button>
+                        } @else {
+                            <span style="color: #666; font-style: italic;">Pedido entregado</span>
+                        }
                     </td>
                 </tr>
             } @empty {
                 <tr>
-                    <td colspan="5" style="padding: 20px; text-align: center; color: #666;">No hay órdenes registradas en el sistema.</td>
+                    <td colspan="5" style="padding: 20px; text-align: center; color: #666;">No hay órdenes en el sistema.</td>
                 </tr>
             }
         </tbody>

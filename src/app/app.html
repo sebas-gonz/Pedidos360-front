@@ -1,7 +1,14 @@
 @if (checkIfLoggedIn()) {
     <nav style="background: #343a40; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; font-family: sans-serif; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        @if (isAdmin() || isOperator()) {
+            <div style="padding: 10px 20px; background: transparent;">
+                <app-kitchen-tickets></app-kitchen-tickets>
+            </div>
+        }
+
+        <app-customer-notifications></app-customer-notifications>
         <div style="display: flex; align-items: center; gap: 30px;">
-            <div style="font-size: 20px; font-weight: bold; letter-spacing: 1px;">🛒 Pedidos360</div>
+            <div style="font-size: 20px; font-weight: bold; letter-spacing: 1px;">Pedidos360</div>
 
             <div style="display: flex; gap: 10px;">
                 <button (click)="navigateTo('dashboard')" [style.background]="currentView === 'dashboard' ? '#495057' : 'transparent'" style="color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: 0.2s;">
@@ -15,6 +22,12 @@
                 <button (click)="navigateTo('orders')" [style.background]="currentView === 'orders' ? '#495057' : 'transparent'" style="color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: 0.2s;">
                     Pedidos
                 </button>
+
+                @if (isAdmin()) {
+                    <button (click)="navigateTo('audit')" [style.background]="currentView === 'audit' ? '#495057' : 'transparent'" style="color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: 0.2s;">
+                        Auditoría
+                    </button>
+                }
             </div>
         </div>
 
@@ -53,6 +66,11 @@
                 <app-operator-orders></app-operator-orders>
             } @else {
                 <app-customers-orders></app-customers-orders>
+            }
+        }
+        @if (currentView === 'audit') {
+            @if (isAdmin()) {
+                <app-admin-audit></app-admin-audit>
             }
         }
     </div>

@@ -1,10 +1,13 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OrderResponseDTO} from '../../models/order.models';
 import {OrderService} from '../../services/order.service';
 import {FormsModule} from '@angular/forms';
+import {
+    KitchenTicketsComponent
+} from '../../../notification/components/kitchen-tickets-component/kitchen-tickets-component';
 
 @Component({
-    imports: [FormsModule],
+    imports: [FormsModule, KitchenTicketsComponent],
     selector: 'app-operator-orders',
     styleUrl: './operator-orders.component.css',
     templateUrl: './operator-orders.component.html',
@@ -49,11 +52,10 @@ export class OperatorOrdersComponent implements OnInit {
         }
     }
 
-    changeStatus(uuid: string, newStatus: string) {
-        this.orderService.updateOrderStatus(uuid, newStatus).subscribe({
+    advanceStatus(uuid: string) {
+        this.orderService.updateOrderStatus(uuid).subscribe({
             next: (updatedOrder) => {
-                alert(`Estado actualizado a ${updatedOrder.orderStatus} con éxito`);
-
+                alert(`Estado avanzado a ${updatedOrder.orderStatus} con éxito`);
                 const index = this.allOrders.findIndex(o => o.orderUuid === updatedOrder.orderUuid);
                 if (index !== -1) {
                     this.allOrders[index] = updatedOrder;
@@ -61,29 +63,12 @@ export class OperatorOrdersComponent implements OnInit {
                 this.cdr.detectChanges();
             },
             error: (err) => {
-                console.error('Error actualizando estado', err);
-                alert('Hubo un error al actualizar el estado.');
+                console.error('Error avanzando estado', err);
+                alert('Hubo un error al avanzar el estado.');
             }
         });
     }
 
-    getValidNextStates(currentStatus: string): string[] {
-        switch (currentStatus) {
-            case 'CREATED':
-                return ['CREATED', 'ACCEPTED', 'CANCELED'];
-            case 'ACCEPTED':
-                return ['ACCEPTED', 'PREPARING', 'DISPATCHED', 'CANCELED'];
-            case 'PREPARING':
-                return ['PREPARING', 'DISPATCHED', 'CANCELED'];
-            case 'DISPATCHED':
-                return ['DISPATCHED', 'DELIVERED'];
-            case 'DELIVERED':
-            case 'CANCELED':
-                return [currentStatus];
-            default:
-                return [currentStatus];
-        }
-    }
     selectedOrder: OrderResponseDTO | null = null;
     openDetails(order: OrderResponseDTO) {
         this.selectedOrder = order;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../../services/product';
 import {CreateProductRequestDTO, ProductResponseDTO, UpdateProductRequestDTO} from '../../models/product.models';
@@ -10,7 +10,7 @@ import {CreateProductRequestDTO, ProductResponseDTO, UpdateProductRequestDTO} fr
     templateUrl: './admin-products.html',
     standalone: true,
 })
-export class AdminProducts {
+export class AdminProducts implements OnInit{
     products: ProductResponseDTO[] = [];
 
     newProduct: CreateProductRequestDTO = {
@@ -24,7 +24,8 @@ export class AdminProducts {
     };
     editingProduct: ProductResponseDTO | null = null;
     updatePayload: UpdateProductRequestDTO = { price: 0, stock: 0 };
-    constructor(private productService: ProductService) {}
+    constructor(private productService: ProductService,
+                private cdr: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.loadProducts();
@@ -32,9 +33,12 @@ export class AdminProducts {
 
     loadProducts() {
         this.productService.getAllProducts().subscribe({
-            next: (data) => this.products = data,
+            next: (data) => {
+                this.products = data
+                this.cdr.detectChanges();
+            },
             error: (err) => console.error('Error cargando productos', err)
-        });
+        })
     }
 
     onCreateSubmit() {

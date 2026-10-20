@@ -68,7 +68,6 @@ export class CustomerCatalogComponent implements OnInit {
 
         this.orderService.createOrder(payload).subscribe({
             next: () => {
-                alert('Orden procesada con éxito. Puedes verla en la pestaña de Pedidos.');
                 this.cart = [];
                 this.cdr.detectChanges();
             },
